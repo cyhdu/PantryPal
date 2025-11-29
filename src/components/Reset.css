@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+html,
+body,
+#root {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+:root {
+    --main-yellow: #E87524;
+    --main-grey: #475569;
+    --cardboard: #F5F5F5;
+    --border: #D9D9D9;
+}
+
+/* BACKGROUND */
+.background {
+    background-image: url("../assets/background.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+}
+
+/* MAIN CONTAINER */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 50%;
+    padding: 10px;
+    margin: 50px;
+
+    background-color: var(--cardboard);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--main-grey);
+    font-family: 'Inter';
+}
+
+/* LOGO */
+.logo-wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.logo-img {
+    width: 15%;
+    height: auto;
+}
+
+/* RESET FORM */
+.reset-form {
+    min-width: 70%;
+}
+
+.title {
+    font-size: 30px;
+    color: #4D7C0F;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+/* LABELS */
+.input-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--main-grey);
+}
+
+/* INPUT FIELDS */
+.input-box {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+
+    border: 2px solid var(--border);
+    background-color: white;
+
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+/* RESET BUTTON */
+.reset-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #E8752450;
+    color: var(--main-grey);
+
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-top: 20px;
+}
+
+.reset-btn:hover {
+    background-color: var(--main-yellow);
+    color: white;
+}
+
+/* RETURN BUTTON */
+.return-btn {
+    width: 100%;
+    padding: 12px;
+
+    background-color: #4D7C0F50;
+    color: var(--main-grey);
+
+    font-weight: bold;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+
+    margin: 20px 0px 40px 0px;
+    text-align: center;
+    transition: 0.2s ease;
+}
+
+.return-btn:hover {
+    background-color: #4D7C0F;
+    color: white;
+}
