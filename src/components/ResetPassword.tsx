@@ -31,8 +31,13 @@ export const ResetPassword = () => {
       })
 
       .catch((err) => {
-        console.log(err);
-        alert("Reset failed.");
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message); // show the backend message
+          console.log("Error:", err.response.data.message);
+        } else {
+          alert("Reset failed.");
+          console.log(err);
+        }
       });
   };
 

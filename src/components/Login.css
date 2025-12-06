@@ -107,6 +107,7 @@ body,
     justify-content: left;
     font-size: 14px;
     margin-bottom: 20px;
+    gap: 4px;
 }
 
 .forget-password {
@@ -171,5 +172,3 @@ body,
     margin-bottom: 50px;
     cursor: pointer;
 }
-
-

@@ -1,9 +1,10 @@
 import logo from "../assets/logo.png";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TermsModal from "./TermsModal";
 import "./Signup.css";
+import { toast } from "react-toastify";
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -12,6 +13,12 @@ export const Signup = () => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [showTerms, setShowTerms] = useState(false);
+
+  // Display error messages
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [generalError, setGeneralError] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,10 +30,17 @@ export const Signup = () => {
         password2,
       })
       .then((res) => {
-        console.log(res.data);
-        navigate("/login");
+        toast.success("Account created successfully!");
+        setTimeout(() => navigate("/login"), 1500);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const msg = err.response?.data?.message || "Something went wrong.";
+
+        if (msg.includes("email")) setEmailError(msg);
+        else if (msg.includes("Password")) setPasswordError(msg);
+        else if (msg.includes("name")) setNameError(msg);
+        else setGeneralError(msg);
+      });
   };
 
   return (
@@ -45,8 +59,12 @@ export const Signup = () => {
             type="text"
             autoComplete="off"
             placeholder="Enter Name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setNameError("");
+            }}
           />
+          {nameError && <p className="error">{nameError}</p>}
 
           <label className="input-label">Email</label>
           <input
@@ -54,8 +72,13 @@ export const Signup = () => {
             type="email"
             autoComplete="off"
             placeholder="Enter Email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setEmailError("");
+              setGeneralError("");
+            }}
           />
+          {emailError && <p className="error">{emailError}</p>}
 
           <label className="input-label">Password</label>
           <input
@@ -63,7 +86,10 @@ export const Signup = () => {
             type="password"
             autoComplete="off"
             placeholder="Enter Password"
-            onChange={(e) => setPassword1(e.target.value)}
+            onChange={(e) => {
+              setPassword1(e.target.value);
+              setGeneralError("");
+            }}
           />
 
           <label className="input-label">Confirm Password</label>
@@ -72,8 +98,13 @@ export const Signup = () => {
             type="password"
             autoComplete="off"
             placeholder="Re-enter Password"
-            onChange={(e) => setPassword2(e.target.value)}
+            onChange={(e) => {
+              setPassword2(e.target.value);
+              setPasswordError("");
+              setGeneralError("");
+            }}
           />
+          {passwordError && <p className="error">{passwordError}</p>}
 
           <p className="message">
             <span>By continuing, you agree to the</span>
@@ -86,7 +117,14 @@ export const Signup = () => {
           <button type="submit" className="signup-btn">
             Sign Up
           </button>
+          <div className="already-account">
+            <span className="text">Already have an account?</span>
+          </div>
+          <Link to="/login">
+            <button className="log-in">Log In</button>
+          </Link>
         </form>
+        {generalError && <p className="error">{generalError}</p>}
       </div>
       <TermsModal show={showTerms} onClose={() => setShowTerms(false)} />
     </div>

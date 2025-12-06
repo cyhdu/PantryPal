@@ -113,3 +113,52 @@ body,
     cursor: pointer;
     margin-bottom: 40px;
 }
+
+.already-account {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 20px 0;
+    color: var(--main-grey);
+    font-weight: 500;
+}
+
+.already-account .text {
+    font-style: italic;
+}
+
+.already-account::before,
+.already-account::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+}
+
+.already-account::before {
+    margin-right: 20px;
+}
+
+.already-account::after {
+    margin-left: 20px;
+}
+
+.log-in {
+    background-color: transparent;
+    color: #4D7C0F;
+    font-weight: bold;
+    border-radius: 4px;
+    border: 1px solid #4D7C0F;
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 50px;
+    cursor: pointer;
+}
+
+.error {
+    color: #c55252;
+    font-size: 16px;
+    margin-top: 4px;
+    font-weight: bold;
+}
