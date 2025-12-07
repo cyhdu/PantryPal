@@ -13,9 +13,12 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch(err => console.log(err));
 
 // Routes
-console.log("Loading users routes...");
+console.log("Loading routes...");
 app.use("/api/users", require("./routes/users"));
-console.log("Users route LOADED!");
+app.use("/api/inventory", require("./routes/inventory"));
+app.use("/api/recipes", require("./routes/recipes"));
+app.use("/api/shopping-list", require("./routes/shoppingList"));
+console.log("Routes LOADED!");
 
 
 app.listen(3000, () => {

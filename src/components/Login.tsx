@@ -58,8 +58,17 @@ export const Login = () => {
       })
       .then((res) => {
         toast.success("Logged in successfully!");
+        console.log("Login response data:", res.data);
 
-        const userId = res.data.userId;
+        const { userId, token } = res.data;
+        
+        if (token) {
+           // Save token for authenticated requests
+           localStorage.setItem("token", token);
+           localStorage.setItem("userId", userId);
+        } else {
+           console.error("No token received from login API!");
+        }
 
         if (checked) {
           localStorage.setItem("savedEmail", email);

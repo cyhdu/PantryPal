@@ -6,31 +6,41 @@ import Sidebar from "./Sidebar";
 import HeaderProfile from "./HeaderProfile";
 import "./UserInsight.css";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 
 export default function UserInsight() {
   const [ingredient, setIngredient] = useState([]);
   const [recipe, setRecipe] = useState([]);
-  const [budget, setBudget] = useState([]);
+  const [budget, setBudget] = useState([]); // Budget API not implemented yet, leaving as empty
 
-  // 🔥 FIX — get username from login navigation
   const location = useLocation();
-  const userId = location.state?.userId;
-  const email = location.state?.email;
-
+  // Fallback to localStorage if state is lost (e.g. refresh)
+  const userId = location.state?.userId || localStorage.getItem("userId");
+  
   const [userName, setUserName] = useState("User");
 
   useEffect(() => {
-    if (!userId) return;
+    const fetchData = async () => {
+      try {
+        if (userId) {
+          const userRes = await api.get(`/users/${userId}`);
+          setUserName(userRes.data.username);
+        }
 
-    axios
-      .get(`http://127.0.0.1:3000/api/users/${userId}`)
-      .then((res) => {
-        setUserName(res.data.username);
-      })
-      .catch((err) => {
-        console.log("Error fetching username", err);
-      });
+        const [invRes, recipeRes] = await Promise.all([
+          api.get("/inventory"),
+          api.get("/recipes")
+        ]);
+
+        setIngredient(invRes.data);
+        setRecipe(recipeRes.data);
+
+      } catch (err) {
+        console.error("Error loading insights", err);
+      }
+    };
+
+    fetchData();
   }, [userId]);
 
   return (
@@ -57,10 +67,14 @@ export default function UserInsight() {
                     </Link>
                   </div>
                 ) : (
-                  <ul className="ingredient-list">
+                  <ul className="ingredient-list w-full px-8 py-4 space-y-2">
                     {ingredient.slice(0, 5).map((item, index) => (
-                      <li key={index}>{item.name}</li>
+                      <li key={index} className="flex justify-between border-b py-1">
+                        <span>{item.name}</span>
+                        <span className="text-gray-500">{item.quantity} {item.unit}</span>
+                      </li>
                     ))}
+                    {ingredient.length > 5 && <li className="text-center text-xs text-gray-400">...and {ingredient.length - 5} more</li>}
                   </ul>
                 )}
               </div>
@@ -76,9 +90,12 @@ export default function UserInsight() {
                     </Link>
                   </div>
                 ) : (
-                  <ul className="recipe-list">
-                    {recipe.slice(0, 5).map((recipe, index) => (
-                      <li key={index}>{recipe.name}</li>
+                  <ul className="recipe-list w-full px-8 py-4 space-y-2">
+                    {recipe.slice(0, 5).map((r, index) => (
+                      <li key={index} className="flex justify-between border-b py-1">
+                        <span>{r.name}</span>
+                        <span className="text-gray-500">{r.calories} kcal</span>
+                      </li>
                     ))}
                   </ul>
                 )}
@@ -87,10 +104,14 @@ export default function UserInsight() {
             <div className="insight-item">
               <h3>Budget Overview</h3>
               <form className="container">
-                <p>No budget yet! Click the button to add.</p>
-                <Link to="/settings/budget" className="add-button">
-                  ADD
-                </Link>
+                <div className="empty-state">
+                   <p>Budget feature coming soon!</p>
+                   {/* 
+                   <Link to="/settings/budget" className="add-button">
+                     ADD
+                   </Link>
+                   */}
+                </div>
               </form>
             </div>
           </div>

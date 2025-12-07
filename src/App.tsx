@@ -12,7 +12,7 @@ import ShoppingListPage from "./pages/ShoppingListPage";
 import SettingsPage from "./pages/SettingsPage";
 import BudgetPage from "./pages/BudgetPage";
 import ExpiryAlertsPage from "./pages/ExpiryAlertsPage";
-import SecurityPage from "./pages/SecurityPage";
+import RecipeDetailPage from "./pages/RecipeDetailPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -40,7 +40,7 @@ function App() {
                   <Route path="/" element={<Navigate to="/signup" replace />} />
                   <Route path="/inventory" element={<InventoryPage />} />
                   <Route path="/recipes" element={<RecipesPage />} />
-                  <Route path="/recipes/1" element={<SecurityPage />} />
+                  <Route path="/recipes/:id" element={<RecipeDetailPage />} />
                   <Route path="/shopping-list" element={<ShoppingListPage />} />
                   <Route path="/insight" element={<UserInsight />} />
 

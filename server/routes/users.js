@@ -103,7 +103,7 @@ router.post("/login", async (req, res) => {
         role: user.role || "user",
       },
       SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: "1d" }
     );
 
     return res.status(200).json({

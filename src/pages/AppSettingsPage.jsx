@@ -1,9 +1,35 @@
-import PersonalInfo from "./PersonalInfo";
-import SettingsPreferences from "./SettingsPreferences";
-import SecuritySection from "./SecuritySection";
-import ProfilePic from "../assets/logo-white.jpeg"; // local profile image
+import { useState, useEffect } from "react";
+import PersonalInfo from "../components/PersonalInfo";
+import SettingsPreferences from "../components/SettingsPreferences";
+import SecuritySection from "../components/SecuritySection";
+import api from "../services/api"; // Import the API service
 
 export default function AppSettings() {
+  const [userName, setUserName] = useState("Loading...");
+  const [userEmail, setUserEmail] = useState("Loading...");
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const userId = localStorage.getItem("userId");
+      if (userId) {
+        try {
+          const response = await api.get(`/users/${userId}`);
+          setUserName(response.data.username);
+          setUserEmail(response.data.email);
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+          setUserName("Error");
+          setUserEmail("Error");
+        }
+      } else {
+        setUserName("Guest");
+        setUserEmail("N/A");
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
   return (
     <div className="px-10 py-8 max-w-4xl">
 
@@ -14,9 +40,9 @@ export default function AppSettings() {
 
         <div>
           <h1 className="text-2xl font-bold text-[#FF8A00]">
-            Akash Muthukumar
+            {userName}
           </h1>
-          <p className="text-sm text-[#5A5A5A]">akashn4@illinois.edu</p>
+          <p className="text-sm text-[#5A5A5A]">{userEmail}</p>
         </div>
       </div>
 

@@ -1,11 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PersonalInfo from "./PersonalInfo";
 import SettingsPreferences from "./SettingsPreferences";
 import SecuritySection from "./SecuritySection";
 import DefaultProfile from "../assets/logo-white.jpeg";
+import api from "../services/api";
 
 export default function AppSettings() {
   const [profilePic, setProfilePic] = useState(DefaultProfile);
+  const [userName, setUserName] = useState("Loading...");
+  const [userEmail, setUserEmail] = useState("Loading...");
+
+  useEffect(() => {
+      const fetchUserProfile = async () => {
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          try {
+            const response = await api.get(`/users/${userId}`);
+            setUserName(response.data.username);
+            setUserEmail(response.data.email);
+          } catch (error) {
+            console.error("Error fetching user profile:", error);
+            setUserName("Error");
+            setUserEmail("Error");
+          }
+        } else {
+          setUserName("Guest");
+          setUserEmail("N/A");
+        }
+      };
+  
+      fetchUserProfile();
+    }, []);
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -22,9 +47,8 @@ export default function AppSettings() {
       <div className="flex items-center gap-6 mb-10">
 
         {/* ==================== FIXED AVATAR BLOCK ==================== */}
-        <div className="relative group w-20 h-20">
+        {/* <div className="relative group w-20 h-20">
 
-          {/* Clipped Circle Image */}
           <div className="w-full h-full rounded-full overflow-hidden bg-gray-200">
             <img
               src={profilePic}
@@ -33,7 +57,6 @@ export default function AppSettings() {
             />
           </div>
 
-          {/* Hover Overlay */}
           <div
             className="
               absolute inset-0 rounded-full 
@@ -43,7 +66,6 @@ export default function AppSettings() {
             "
           ></div>
 
-          {/* Edit Button */}
           <label
             htmlFor="profileUpload"
             className="
@@ -57,7 +79,6 @@ export default function AppSettings() {
             <span className="material-icons text-white text-sm">edit</span>
           </label>
 
-          {/* Tooltip */}
           <div
             className="
               absolute top-[-30px] left-1/2 -translate-x-1/2
@@ -69,7 +90,6 @@ export default function AppSettings() {
             Change Photo
           </div>
 
-          {/* Hidden File Input */}
           <input
             id="profileUpload"
             type="file"
@@ -77,14 +97,14 @@ export default function AppSettings() {
             className="hidden"
             onChange={handleUpload}
           />
-        </div>
+        </div> */}
 
         {/* USER NAME + EMAIL */}
         <div>
           <h1 className="text-2xl font-semibold text-[#FF8A00]">
-            Akash Muthukumar
+            {userName}
           </h1>
-          <p className="text-sm text-[#5A5A5A]">akashn4@illinois.edu</p>
+          <p className="text-sm text-[#5A5A5A]">{userEmail}</p>
         </div>
       </div>
 
