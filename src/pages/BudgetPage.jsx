@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ScaleWrapper from "../components/ScaleWrapper";
 import HeaderProfile from "../components/HeaderProfile";
@@ -5,6 +6,23 @@ import AppSettings from "../components/AppSettings";
 
 export default function BudgetPage() {
   const navigate = useNavigate();
+
+  // Local states
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState("US Dollar");
+
+  // Save budget to localStorage
+  function handleSave() {
+    localStorage.setItem(
+      "budget",
+      JSON.stringify({
+        amount: amount,
+        currency: currency,
+      })
+    );
+
+    navigate("/settings"); // Go back to settings page
+  }
 
   return (
     <ScaleWrapper>
@@ -37,6 +55,7 @@ export default function BudgetPage() {
               Budget &amp; Spending
             </h1>
 
+            {/* FORM FIELDS */}
             <div className="space-y-4 text-sm">
               <div>
                 <p className="text-xs text-gray-500 mb-1">Saving Reminder</p>
@@ -47,20 +66,31 @@ export default function BudgetPage() {
 
               <div>
                 <p className="text-xs text-gray-500 mb-1">Monthly Food Budget</p>
-                <input className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3" />
+                <input
+                  className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="Enter amount (e.g. 300)"
+                />
               </div>
 
               <div>
                 <p className="text-xs text-gray-500 mb-1">Currency</p>
-                <select className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3 bg-white">
+                <select
+                  className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3 bg-white"
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                >
                   <option>US Dollar</option>
+                  <option>Euro</option>
+                  <option>Yen</option>
                 </select>
               </div>
             </div>
 
             {/* DONE BUTTON */}
             <button
-              onClick={() => navigate("/settings")}
+              onClick={handleSave}
               className="mt-8 w-full h-10 rounded-lg bg-[#FF8A00] text-white font-semibold text-sm"
             >
               Done
