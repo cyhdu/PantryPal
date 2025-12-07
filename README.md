@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# PantryPal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PantryPal is a full-stack web application designed to help users manage their kitchen pantry, discover recipes, organize shopping lists, and track their food budget and item expiration dates.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Inventory Management**: Keep track of ingredients in your pantry.
+- **Recipe Management**: Browse and view detailed recipes.
+- **Shopping List**: Manage items you need to buy.
+- **User Insights**: Gain insights into your consumption habits.
+- **Budget Tracking**: Monitor your spending on food.
+- **Expiry Alerts**: Get notified about items nearing their expiration date.
+- **Secure Authentication**: User signup, login, and password reset functionality.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Frontend:**
+- React (Vite)
+- TypeScript
+- TailwindCSS
+- React Router DOM
+- Axios
 
-## Expanding the ESLint configuration
+**Backend:**
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Follow these instructions to get the project up and running on your local machine.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Node.js installed on your machine.
+- MongoDB installed and running locally, or a MongoDB Atlas connection string.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd PantryPal
+    ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2.  **Install Frontend Dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Install Backend Dependencies:**
+    ```bash
+    cd server
+    npm install
+    ```
+
+### Configuration
+
+1.  **Backend Environment:**
+    Create a `.env` file in the `server/` directory and add your MongoDB connection string:
+    ```env
+    MONGODB_URI=mongodb://localhost:27017/pantrypal
+    ```
+    (Replace with your actual MongoDB URI if different)
+
+2.  **Frontend Configuration:**
+    The frontend is currently configured to look for the backend at `http://127.0.0.1:3000/api`. If your server runs on a different port or host, update `src/services/api.ts`.
+
+### Running the Application
+
+1.  **Start the Backend Server:**
+    Open a terminal, navigate to the `server` directory, and run:
+    ```bash
+    cd server
+    npm start
+    ```
+    The server should start on `http://localhost:3000`.
+
+2.  **Start the Frontend:**
+    Open a new terminal window in the project root directory and run:
+    ```bash
+    npm run dev
+    ```
+    The application will typically run on `http://localhost:5173` (check the terminal output).
+
+## Project Structure
+
+- **`/src`**: Contains the React frontend code.
+    - **`components`**: Reusable UI components.
+    - **`pages`**: Application views/routes.
+    - **`services`**: API service configuration.
+- **`/server`**: Contains the Node.js/Express backend code.
+    - **`models`**: Mongoose data models.
+    - **`routes`**: API route definitions.
