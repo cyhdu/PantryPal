@@ -4,6 +4,7 @@ import HeaderProfile from "../components/HeaderProfile";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import useAuthGuard from "../components/useAuthGuard";
 
 export default function InventoryPage() {
   const [ingredients, setIngredients] = useState([]);
@@ -24,6 +25,7 @@ export default function InventoryPage() {
     calories: 0,
     expiryDate: "",
   });
+  useAuthGuard();
 
   useEffect(() => {
     fetchIngredients();

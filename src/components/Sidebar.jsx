@@ -51,11 +51,22 @@ export default function Sidebar() {
           <span>Settings</span>
         </NavLink>
 
-        <button className="w-[calc(100%)] text-left">
-          <NavLink to="/login" className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-[#c64b3b] hover:bg-[#ffe1ba] cursor-pointer">
+        <button
+          className="w-[calc(100%)] text-left"
+          onClick={() => {
+            // Clear all auth info
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("savedEmail");
+
+            // Redirect to login
+            window.location.href = "/login";
+          }}
+        >
+          <div className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-[#c64b3b] hover:bg-[#ffe1ba] cursor-pointer">
             <span className={iconCircle}>⏏️</span>
             <span>Log Out</span>
-          </NavLink>
+          </div>
         </button>
       </div>
     </aside>

@@ -6,6 +6,7 @@ import HeaderProfile from "./HeaderProfile";
 import "./UserInsight.css";
 import { Link, useLocation } from "react-router-dom";
 import api from "../services/api";
+import useAuthGuard from "./useAuthGuard";
 
 export default function UserInsight() {
   const [ingredient, setIngredient] = useState([]);
@@ -18,6 +19,8 @@ export default function UserInsight() {
   const userId = location.state?.userId || localStorage.getItem("userId");
 
   const [userName, setUserName] = useState("User");
+
+  useAuthGuard();
 
   useEffect(() => {
     const fetchData = async () => {
