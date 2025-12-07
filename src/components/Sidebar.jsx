@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import Logo from "../assets/pantrypal.png";
 
 const navLinkBase =
-  "flex items-center gap-3 px-6 py-3 rounded-xl text-sm font-medium transition-colors cursor-pointer";
+  "flex items-center gap-3 px-6 py-4 text-sm font-medium transition-colors cursor-pointer";
 const iconCircle =
   "flex items-center justify-center w-8 h-8 rounded-full border border-[#f0d9a9]";
 
@@ -24,7 +24,7 @@ export default function Sidebar() {
             className="h-10 w-auto object-contain" />
         </div>
 
-        <nav className="flex flex-col gap-1">
+        <nav className="flex flex-col">
           <NavLink to="/inventory" className={getNavClasses}>
             <span className={iconCircle}>🍎</span>
             <span>Inventory</span>
@@ -51,8 +51,8 @@ export default function Sidebar() {
           <span>Settings</span>
         </NavLink>
 
-        <button className="mt-1 ml-2 mr-2 w-[calc(100%-1rem)] text-left">
-          <NavLink to="/login" className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#c64b3b] hover:bg-[#ffe1ba] cursor-pointer">
+        <button className="w-[calc(100%)] text-left">
+          <NavLink to="/login" className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-[#c64b3b] hover:bg-[#ffe1ba] cursor-pointer">
             <span className={iconCircle}>⏏️</span>
             <span>Log Out</span>
           </NavLink>

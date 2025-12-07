@@ -261,7 +261,7 @@ export default function RecipesPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 max-w-3xl">
+        <div className="flex flex-col gap-4">
           {filteredRecipes.length === 0 && <p className="text-gray-500">No recipes found.</p>}
 
           {filteredRecipes.map((r) => (

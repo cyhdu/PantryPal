@@ -148,7 +148,7 @@ export default function ShoppingListPage() {
             {/* Buttons hidden for now as functionality is on InventoryPage */}
           </div>
 
-          <div className="flex flex-col gap-4 max-w-xl h-[500px] overflow-y-auto">
+          <div className="flex flex-col gap-4 h-[500px] overflow-y-auto">
              {inventory.length === 0 && <p className="text-gray-500">Pantry is empty.</p>}
 
              {inventory.map((item) => {
@@ -163,7 +163,7 @@ export default function ShoppingListPage() {
                       {item.name}
                     </h3>
                     <p className="mt-1 text-xs text-gray-500">
-                      qty: {item.quantity} {item.unit} &nbsp;&nbsp; cat: {item.category}
+                      Qty: {item.quantity} {item.unit} &nbsp;&nbsp; Category: {item.category}
                     </p>
                   </div>
                    {badge && (
