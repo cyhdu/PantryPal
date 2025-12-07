@@ -4,6 +4,7 @@ import HeaderProfile from "../components/HeaderProfile";
 import api from "../services/api";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
+import useAuthGuard from "../components/useAuthGuard"; 
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
@@ -11,12 +12,12 @@ export default function RecipesPage() {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  
+
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState("");
   const [priceFilter, setPriceFilter] = useState("All");
   const [tagFilter, setTagFilter] = useState("");
-  
+
   // New Numeric Filters
   const [timeFilter, setTimeFilter] = useState(""); // Max Prep Time
   const [calFilter, setCalFilter] = useState("");   // Max Calories
@@ -40,6 +41,8 @@ export default function RecipesPage() {
   const location = useLocation();
   const currentUserId = localStorage.getItem("userId");
 
+  useAuthGuard(); 
+
   useEffect(() => {
     fetchRecipes();
   }, []);
@@ -50,7 +53,7 @@ export default function RecipesPage() {
 
     if (searchTerm) {
       const lowerTerm = searchTerm.toLowerCase();
-      result = result.filter(r => 
+      result = result.filter(r =>
         r.name.toLowerCase().includes(lowerTerm) ||
         (r.ingredients && r.ingredients.some(ing => ing.name.toLowerCase().includes(lowerTerm)))
       );
@@ -61,7 +64,7 @@ export default function RecipesPage() {
     }
 
     if (tagFilter) {
-      result = result.filter(r => 
+      result = result.filter(r =>
         r.tags && r.tags.some(tag => tag.toLowerCase().includes(tagFilter.toLowerCase()))
       );
     }
@@ -85,7 +88,7 @@ export default function RecipesPage() {
   useEffect(() => {
     if (location.state && location.state.ingredientSearch) {
       const term = location.state.ingredientSearch.toLowerCase();
-      setSearchTerm(term); 
+      setSearchTerm(term);
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, navigate]);
@@ -129,10 +132,10 @@ export default function RecipesPage() {
   };
 
   const resetForm = () => {
-    setFormData({ 
-        name: "", description: "", prepTime: "15 min", calories: 200, priceEstimate: "$", tags: "",
-        ingredients: [], instructions: [], nutrition: { protein: "", fat: "", carbs: "" }
-      });
+    setFormData({
+      name: "", description: "", prepTime: "15 min", calories: 200, priceEstimate: "$", tags: "",
+      ingredients: [], instructions: [], nutrition: { protein: "", fat: "", carbs: "" }
+    });
     setIsEditing(false);
     setEditingId(null);
     setShowModal(false);
@@ -156,7 +159,7 @@ export default function RecipesPage() {
         setRecipes([res.data, ...recipes]);
         toast.success("Recipe added");
       }
-      
+
       resetForm();
     } catch (err) {
       toast.error("Failed to save recipe");
@@ -174,8 +177,8 @@ export default function RecipesPage() {
 
   const removeIngredient = (index) => {
     setFormData(prev => ({
-        ...prev,
-        ingredients: prev.ingredients.filter((_, i) => i !== index)
+      ...prev,
+      ingredients: prev.ingredients.filter((_, i) => i !== index)
     }));
   };
 
@@ -190,8 +193,8 @@ export default function RecipesPage() {
 
   const removeInstruction = (index) => {
     setFormData(prev => ({
-        ...prev,
-        instructions: prev.instructions.filter((_, i) => i !== index)
+      ...prev,
+      instructions: prev.instructions.filter((_, i) => i !== index)
     }));
   };
 
@@ -205,7 +208,7 @@ export default function RecipesPage() {
             <h1 className="text-2xl font-semibold text-[#FF8A00]">
               Recipes
             </h1>
-            <button 
+            <button
               onClick={() => { resetForm(); setShowModal(true); }}
               className="flex items-center justify-center w-9 h-9 rounded-full border border-[#FF8A00] text-[#FF8A00] hover:bg-[#FF8A00] hover:text-white transition"
             >
@@ -222,7 +225,7 @@ export default function RecipesPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            
+
             {/* Filters */}
             <select
               className="h-10 rounded-lg border border-[#e2e2e2] px-3 text-sm outline-none focus:border-[#FF8A00] bg-white cursor-pointer"
@@ -321,57 +324,57 @@ export default function RecipesPage() {
           <div className="bg-white p-6 rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">{isEditing ? "Edit Recipe" : "Add Recipe"}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-              
+
               {/* Basic Info */}
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Recipe Name</label>
-                <input 
-                  className="w-full border p-2 rounded" 
-                  placeholder="Recipe Name" 
+                <input
+                  className="w-full border p-2 rounded"
+                  placeholder="Recipe Name"
                   value={formData.name}
-                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Short Description</label>
-                <textarea 
-                  className="w-full border p-2 rounded" 
-                  placeholder="Short Description" 
+                <textarea
+                  className="w-full border p-2 rounded"
+                  placeholder="Short Description"
                   value={formData.description}
-                  onChange={e => setFormData({...formData, description: e.target.value})}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
               <div className="flex gap-2">
-                 <div className="w-1/2">
-                    <label className="block text-sm text-gray-600 mb-1">Prep Time</label>
-                    <input 
-                      className="w-full border p-2 rounded" 
-                      placeholder="e.g. 20 min" 
-                      value={formData.prepTime}
-                      onChange={e => setFormData({...formData, prepTime: e.target.value})}
-                    />
-                 </div>
-                 <div className="w-1/2">
-                    <label className="block text-sm text-gray-600 mb-1">Price Estimate</label>
-                    <select 
-                      className="w-full border p-2 rounded" 
-                      value={formData.priceEstimate}
-                      onChange={e => setFormData({...formData, priceEstimate: e.target.value})}
-                    >
-                      <option value="$">$</option>
-                      <option value="$$">$$</option>
-                      <option value="$$$">$$$</option>
-                    </select>
-                 </div>
+                <div className="w-1/2">
+                  <label className="block text-sm text-gray-600 mb-1">Prep Time</label>
+                  <input
+                    className="w-full border p-2 rounded"
+                    placeholder="e.g. 20 min"
+                    value={formData.prepTime}
+                    onChange={e => setFormData({ ...formData, prepTime: e.target.value })}
+                  />
+                </div>
+                <div className="w-1/2">
+                  <label className="block text-sm text-gray-600 mb-1">Price Estimate</label>
+                  <select
+                    className="w-full border p-2 rounded"
+                    value={formData.priceEstimate}
+                    onChange={e => setFormData({ ...formData, priceEstimate: e.target.value })}
+                  >
+                    <option value="$">$</option>
+                    <option value="$$">$$</option>
+                    <option value="$$$">$$$</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Tags</label>
-                <input 
-                  className="w-full border p-2 rounded" 
-                  placeholder="Meat, Vegan (comma separated)" 
+                <input
+                  className="w-full border p-2 rounded"
+                  placeholder="Meat, Vegan (comma separated)"
                   value={formData.tags}
-                  onChange={e => setFormData({...formData, tags: e.target.value})}
+                  onChange={e => setFormData({ ...formData, tags: e.target.value })}
                 />
               </div>
 
@@ -379,42 +382,42 @@ export default function RecipesPage() {
               <div className="border-t pt-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Nutrition</label>
                 <div className="flex gap-2">
-                    <div className="w-1/4">
-                        <label className="block text-xs text-gray-500">Calories</label>
-                        <input 
-                            type="number"
-                            className="w-full border p-2 rounded" 
-                            value={formData.calories}
-                            onChange={e => setFormData({...formData, calories: Number(e.target.value)})}
-                        />
-                    </div>
-                    <div className="w-1/4">
-                        <label className="block text-xs text-gray-500">Protein</label>
-                        <input 
-                            className="w-full border p-2 rounded" 
-                            placeholder="e.g. 20g"
-                            value={formData.nutrition.protein}
-                            onChange={e => setFormData({...formData, nutrition: {...formData.nutrition, protein: e.target.value}})}
-                        />
-                    </div>
-                    <div className="w-1/4">
-                        <label className="block text-xs text-gray-500">Carbs</label>
-                        <input 
-                            className="w-full border p-2 rounded" 
-                            placeholder="e.g. 50g"
-                            value={formData.nutrition.carbs}
-                            onChange={e => setFormData({...formData, nutrition: {...formData.nutrition, carbs: e.target.value}})}
-                        />
-                    </div>
-                    <div className="w-1/4">
-                        <label className="block text-xs text-gray-500">Fat</label>
-                        <input 
-                            className="w-full border p-2 rounded" 
-                            placeholder="e.g. 10g"
-                            value={formData.nutrition.fat}
-                            onChange={e => setFormData({...formData, nutrition: {...formData.nutrition, fat: e.target.value}})}
-                        />
-                    </div>
+                  <div className="w-1/4">
+                    <label className="block text-xs text-gray-500">Calories</label>
+                    <input
+                      type="number"
+                      className="w-full border p-2 rounded"
+                      value={formData.calories}
+                      onChange={e => setFormData({ ...formData, calories: Number(e.target.value) })}
+                    />
+                  </div>
+                  <div className="w-1/4">
+                    <label className="block text-xs text-gray-500">Protein</label>
+                    <input
+                      className="w-full border p-2 rounded"
+                      placeholder="e.g. 20g"
+                      value={formData.nutrition.protein}
+                      onChange={e => setFormData({ ...formData, nutrition: { ...formData.nutrition, protein: e.target.value } })}
+                    />
+                  </div>
+                  <div className="w-1/4">
+                    <label className="block text-xs text-gray-500">Carbs</label>
+                    <input
+                      className="w-full border p-2 rounded"
+                      placeholder="e.g. 50g"
+                      value={formData.nutrition.carbs}
+                      onChange={e => setFormData({ ...formData, nutrition: { ...formData.nutrition, carbs: e.target.value } })}
+                    />
+                  </div>
+                  <div className="w-1/4">
+                    <label className="block text-xs text-gray-500">Fat</label>
+                    <input
+                      className="w-full border p-2 rounded"
+                      placeholder="e.g. 10g"
+                      value={formData.nutrition.fat}
+                      onChange={e => setFormData({ ...formData, nutrition: { ...formData.nutrition, fat: e.target.value } })}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -422,27 +425,27 @@ export default function RecipesPage() {
               <div className="border-t pt-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Ingredients</label>
                 <div className="flex gap-2 mb-2">
-                    <input 
-                        className="w-2/3 border p-2 rounded" 
-                        placeholder="Ingredient Name" 
-                        value={tempIngredient.name}
-                        onChange={e => setTempIngredient({...tempIngredient, name: e.target.value})}
-                    />
-                    <input 
-                        className="w-1/3 border p-2 rounded" 
-                        placeholder="Qty (e.g 1 cup)" 
-                        value={tempIngredient.quantity}
-                        onChange={e => setTempIngredient({...tempIngredient, quantity: e.target.value})}
-                    />
-                    <button type="button" onClick={addIngredient} className="bg-gray-200 px-3 rounded hover:bg-gray-300">+</button>
+                  <input
+                    className="w-2/3 border p-2 rounded"
+                    placeholder="Ingredient Name"
+                    value={tempIngredient.name}
+                    onChange={e => setTempIngredient({ ...tempIngredient, name: e.target.value })}
+                  />
+                  <input
+                    className="w-1/3 border p-2 rounded"
+                    placeholder="Qty (e.g 1 cup)"
+                    value={tempIngredient.quantity}
+                    onChange={e => setTempIngredient({ ...tempIngredient, quantity: e.target.value })}
+                  />
+                  <button type="button" onClick={addIngredient} className="bg-gray-200 px-3 rounded hover:bg-gray-300">+</button>
                 </div>
                 <ul className="text-xs text-gray-600 space-y-1">
-                    {formData.ingredients.map((ing, i) => (
-                        <li key={i} className="flex justify-between bg-gray-50 p-1 rounded px-2">
-                            <span>{ing.quantity} {ing.name}</span>
-                            <button type="button" onClick={() => removeIngredient(i)} className="text-red-400 font-bold">×</button>
-                        </li>
-                    ))}
+                  {formData.ingredients.map((ing, i) => (
+                    <li key={i} className="flex justify-between bg-gray-50 p-1 rounded px-2">
+                      <span>{ing.quantity} {ing.name}</span>
+                      <button type="button" onClick={() => removeIngredient(i)} className="text-red-400 font-bold">×</button>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -450,24 +453,24 @@ export default function RecipesPage() {
               <div className="border-t pt-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Instructions</label>
                 <div className="flex gap-2 mb-2">
-                    <textarea 
-                        className="w-full border p-2 rounded" 
-                        placeholder="Step description..." 
-                        value={tempInstruction}
-                        onChange={e => setTempInstruction(e.target.value)}
-                    />
-                    <button type="button" onClick={addInstruction} className="bg-gray-200 px-3 rounded hover:bg-gray-300 h-fit py-2">+</button>
+                  <textarea
+                    className="w-full border p-2 rounded"
+                    placeholder="Step description..."
+                    value={tempInstruction}
+                    onChange={e => setTempInstruction(e.target.value)}
+                  />
+                  <button type="button" onClick={addInstruction} className="bg-gray-200 px-3 rounded hover:bg-gray-300 h-fit py-2">+</button>
                 </div>
                 <ol className="text-xs text-gray-600 space-y-1">
-                    {formData.instructions.map((step, i) => (
-                        <li key={i} className="flex justify-between bg-gray-50 p-1 rounded px-2">
-                            <span>{i+1}. {step}</span>
-                            <button type="button" onClick={() => removeInstruction(i)} className="text-red-400 font-bold">×</button>
-                        </li>
-                    ))}
+                  {formData.instructions.map((step, i) => (
+                    <li key={i} className="flex justify-between bg-gray-50 p-1 rounded px-2">
+                      <span>{i + 1}. {step}</span>
+                      <button type="button" onClick={() => removeInstruction(i)} className="text-red-400 font-bold">×</button>
+                    </li>
+                  ))}
                 </ol>
               </div>
-              
+
               <div className="flex justify-end gap-2 mt-6 pt-4 border-t">
                 <button type="button" onClick={resetForm} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
                 <button type="submit" className="px-4 py-2 bg-[#FF8A00] text-white rounded hover:bg-[#e67900]">{isEditing ? "Save Changes" : "Add"}</button>

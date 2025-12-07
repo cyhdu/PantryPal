@@ -3,6 +3,7 @@ import HeaderProfile from "../components/HeaderProfile";
 import AppSettings from "../components/AppSettings";
 import { useState, useEffect } from "react";
 import api from "../services/api";
+import useAuthGuard from "../components/useAuthGuard"; 
 
 export default function SettingsPage() {
   const [userName, setUserName] = useState("User");
@@ -10,6 +11,8 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchUserName();
   }, []);
+
+  useAuthGuard(); 
 
   const fetchUserName = async () => {
     const userId = localStorage.getItem("userId");

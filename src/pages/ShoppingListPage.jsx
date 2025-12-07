@@ -3,6 +3,7 @@ import ScaleWrapper from "../components/ScaleWrapper";
 import HeaderProfile from "../components/HeaderProfile";
 import api from "../services/api";
 import { toast } from "react-toastify";
+import useAuthGuard from "../components/useAuthGuard"; 
 
 export default function ShoppingListPage() {
   const [shoppingList, setShoppingList] = useState([]);
@@ -17,6 +18,8 @@ export default function ShoppingListPage() {
     fetchData();
     fetchUserName();
   }, []);
+
+  useAuthGuard(); 
 
   // Fetch username
   const fetchUserName = async () => {
@@ -75,13 +78,13 @@ export default function ShoppingListPage() {
       console.error(err);
     }
   };
-  
+
   // Helper to calculate days until expiry (reused from InventoryPage logic)
   const getExpiryBadge = (dateStr) => {
     if (!dateStr) return null;
     const diff = new Date(dateStr) - new Date();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    
+
     if (days < 0) return { text: "Expired", color: "bg-gray-500" };
     if (days <= 3) return { text: `${days} Days`, color: "bg-[#F04438]" };
     if (days <= 7) return { text: "1 Week", color: "bg-[#FDB022]" };
@@ -109,11 +112,11 @@ export default function ShoppingListPage() {
                   className="flex items-center justify-between text-gray-700 group"
                 >
                   <div className="flex items-center gap-2">
-                    <input 
-                      type="checkbox" 
-                      checked={item.isChecked} 
+                    <input
+                      type="checkbox"
+                      checked={item.isChecked}
                       onChange={() => handleToggleCheck(item._id, item.isChecked)}
-                      className="accent-[#FF8A00] cursor-pointer" 
+                      className="accent-[#FF8A00] cursor-pointer"
                     />
                     <span className={item.isChecked ? "line-through text-gray-400" : ""}>{item.name}</span>
                   </div>
@@ -125,7 +128,7 @@ export default function ShoppingListPage() {
               ))}
             </ul>
 
-            <button 
+            <button
               onClick={() => setShowModal(true)}
               className="mt-4 flex items-center gap-2 text-sm font-medium text-[#FF8A00] hover:underline"
             >
@@ -149,11 +152,11 @@ export default function ShoppingListPage() {
           </div>
 
           <div className="flex flex-col gap-4 max-w-xl h-[500px] overflow-y-auto">
-             {inventory.length === 0 && <p className="text-gray-500">Pantry is empty.</p>}
+            {inventory.length === 0 && <p className="text-gray-500">Pantry is empty.</p>}
 
-             {inventory.map((item) => {
-               const badge = getExpiryBadge(item.expiryDate);
-               return (
+            {inventory.map((item) => {
+              const badge = getExpiryBadge(item.expiryDate);
+              return (
                 <div key={item._id} className="flex items-center gap-4 rounded-2xl bg-white shadow-sm border border-[#eeeeee] px-5 py-4">
                   {/* <div className="w-24 h-20 rounded-xl bg-[#F5F5F5] border border-dashed border-gray-300 flex items-center justify-center">
                     <span className="text-xs text-gray-400">Img</span>
@@ -166,36 +169,36 @@ export default function ShoppingListPage() {
                       qty: {item.quantity} {item.unit} &nbsp;&nbsp; cat: {item.category}
                     </p>
                   </div>
-                   {badge && (
+                  {badge && (
                     <span className={`inline-flex items-center rounded-md px-3 py-1 text-xs font-semibold text-white ${badge.color}`}>
                       {badge.text}
                     </span>
                   )}
                 </div>
-               );
-             })}
+              );
+            })}
           </div>
         </section>
       </main>
 
-       {/* Add Item Modal */}
-       {showModal && (
+      {/* Add Item Modal */}
+      {showModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl w-full max-w-sm">
             <h2 className="text-xl font-bold mb-4">Add Item</h2>
             <form onSubmit={handleAddItem} className="space-y-3">
-              <input 
-                className="w-full border p-2 rounded" 
-                placeholder="Item Name" 
+              <input
+                className="w-full border p-2 rounded"
+                placeholder="Item Name"
                 value={newItem.name}
-                onChange={e => setNewItem({...newItem, name: e.target.value})}
+                onChange={e => setNewItem({ ...newItem, name: e.target.value })}
                 required
               />
-               <input 
-                className="w-full border p-2 rounded" 
-                placeholder="Amount (e.g. 1 bag)" 
+              <input
+                className="w-full border p-2 rounded"
+                placeholder="Amount (e.g. 1 bag)"
                 value={newItem.amount}
-                onChange={e => setNewItem({...newItem, amount: e.target.value})}
+                onChange={e => setNewItem({ ...newItem, amount: e.target.value })}
               />
               <div className="flex justify-end gap-2 mt-4">
                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600">Cancel</button>

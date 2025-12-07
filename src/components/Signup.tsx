@@ -57,7 +57,7 @@ export const Signup = () => {
           <input
             className="input-box"
             type="text"
-            autoComplete="off"
+            autoComplete="off"   
             placeholder="Enter Name"
             onChange={(e) => {
               setName(e.target.value);

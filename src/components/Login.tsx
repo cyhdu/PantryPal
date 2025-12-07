@@ -61,13 +61,13 @@ export const Login = () => {
         console.log("Login response data:", res.data);
 
         const { userId, token } = res.data;
-        
+
         if (token) {
-           // Save token for authenticated requests
-           localStorage.setItem("token", token);
-           localStorage.setItem("userId", userId);
+          // Save token for authenticated requests
+          localStorage.setItem("token", token);
+          localStorage.setItem("userId", userId);
         } else {
-           console.error("No token received from login API!");
+          console.error("No token received from login API!");
         }
 
         if (checked) {

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const SECRET = "mysecretkey";
 
@@ -37,44 +38,50 @@ function authorize(allowedRoles = []) {
   };
 }
 
-router.post("/signup", async function (req, res) {   
-        try {
-            const { name, email, password1, password2 } = req.body;
 
-            // Validation on name and email 
-            if (!name || !email || !password1 || !password2) {
-                return res.status(400).json({ message: "All fields are required." })
-            }
+router.post("/signup", async (req, res) => {
+  try {
+    const { name, email, password1, password2 } = req.body;
 
-            // Check duplicate emails
-            const existingEmail = await User.findOne({ email:email });
-            if (existingEmail) {
-                return res.status(400).json({ message: "A user with that email already exists." })
-            }
+    if (!name || !email || !password1 || !password2) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
 
-            if (password1.length < 6) {
-              return res.status(400).json({ message: "The password must be at least 6 characters long." })
-            }
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: "A user with that email already exists." });
+    }
 
-            if (password1 !== password2) {
-                return res.status(400).json({ message: "Passwords must match!" })
-            }
+    if (password1.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters." });
+    }
 
-            // Create a new user
-            const newUser = new User({
-                name,
-                email,
-                password1,
-                password2,
-                role: "user", 
-                });
-            await newUser.save();
-            return res.status(201).json({ message: "User created", data: newUser });
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({ message: "Server error", data: error });
-        }
+    if (password1 !== password2) {
+      return res.status(400).json({ message: "Passwords must match." });
+    }
+
+    // HASH PASSWORD
+    // HASH BOTH PASSWORD1 AND PASSWORD2
+    const hashed1 = await bcrypt.hash(password1, 10);
+    const hashed2 = await bcrypt.hash(password2, 10);
+
+    const newUser = new User({
+      name,
+      email,
+      password1: hashed1,
+      password2: hashed2,
+      role: "user",
     });
+
+    await newUser.save();
+
+    return res.status(201).json({ message: "User created successfully" });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.post("/login", async (req, res) => {
   try {
@@ -84,19 +91,17 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Email and password required." });
     }
 
-    // find user by email
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(400).json({ message: "Email does not exist." });
     }
 
-    // compare passwords
-    if (password !== user.password1) {
+    // Compare hash
+    const validPassword = await bcrypt.compare(password, user.password1);
+    if (!validPassword) {
       return res.status(400).json({ message: "Incorrect password." });
     }
 
-    // create JWT
     const token = jwt.sign(
       {
         userId: user._id,
@@ -116,11 +121,11 @@ router.post("/login", async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Server error", data: error });
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -146,31 +151,33 @@ router.post("/resetpassword", async (req, res) => {
     }
 
     const user = await User.findOne({ name });
-
     if (!user) {
       return res.status(400).json({ message: "User not found." });
     }
+
     if (newPassword.length < 6) {
-      return res.status(400).json({ message: "The password must be at least 6 characters long." })
+      return res.status(400).json({ message: "Password must be at least 6 characters." });
     }
 
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: "Passwords must match." });
     }
 
-    user.password1 = newPassword;
-    user.password2 = confirmPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
-    return res.status(200).json({
-      message: "Password reset successfully.",
-    });
+    return res.status(200).json({ message: "Password reset successfully." });
 
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server error", data: error });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
+
+router.post("/logout", (req, res) => {
+  return res.status(200).json({ message: "Logged out" });
+});
+
 // ---------------- PROTECTED ROUTE EXAMPLE ----------------
 router.get("/private", authenticate, authorize(["admin"]), (req, res) => {
   res.json({
