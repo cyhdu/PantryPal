@@ -49,11 +49,6 @@ export default function AppSettings() {
       {/* Personal Info Section */}
       <PersonalInfo />
 
-      {/* Preferences */}
-      <SettingsPreferences />
-
-      {/* Security */}
-      <SecuritySection />
 
       {/* App Section */}
       <section className="mt-10">

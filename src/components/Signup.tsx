@@ -57,7 +57,7 @@ export const Signup = () => {
           <input
             className="input-box"
             type="text"
-            autoComplete="off"   
+            autoComplete="off"
             placeholder="Enter Name"
             onChange={(e) => {
               setName(e.target.value);
@@ -113,7 +113,6 @@ export const Signup = () => {
               Terms of Use and Privacy Policy
             </span>
           </p>
-
           <button type="submit" className="signup-btn">
             Sign Up
           </button>

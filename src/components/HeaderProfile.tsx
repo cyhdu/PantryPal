@@ -53,9 +53,13 @@ export default function HeaderProfile({
 
       {/* Right Section */}
       <div className="flex items-center gap-6 ml-6">
-        <button className="relative">
-          <span className="text-sm text-gray-600 font-medium">{displayName}</span>
-        </button>
+        <div className="flex items-center gap-3 ml-6">
+          <span className="w-3 h-3 rounded-full bg-green-200"></span>
+
+          <span className="text-sm text-gray-600 font-medium">
+            {displayName}
+          </span>
+        </div>
 
         {/* Profile Avatar */}
         {/* <div className="flex items-center gap-3">

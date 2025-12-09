@@ -123,12 +123,18 @@ body,
     color: #FFFFFF;
     font-weight: bold;
     border-radius: 4px;
-    border: var(--border) 2px;
+    border: 1px solid var(--border);
     text-align: center;
     width: 100%;
     padding: 12px;
     margin: 15px 0;
     cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: transparent;
+    border: 1px solid #4D7C0F;
+    color: #4D7C0F;
 }
 
 .new-to-pantry {
@@ -171,4 +177,9 @@ body,
     padding: 12px;
     margin-bottom: 50px;
     cursor: pointer;
+}
+
+.create-btn:hover {
+    background-color: #E87524;
+    color: white;
 }

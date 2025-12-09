@@ -46,6 +46,8 @@ export default function ExpiryAlertsPage() {
                   <p className="text-xs text-gray-500 mb-1">Alert Time Window</p>
                   <select className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3 bg-white">
                     <option>3 days</option>
+                    <option>one week</option>
+                    <option>one month</option>
                   </select>
                 </div>
 
@@ -53,6 +55,7 @@ export default function ExpiryAlertsPage() {
                   <p className="text-xs text-gray-500 mb-1">Auto-Sort Option</p>
                   <select className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3 bg-white">
                     <option>Freshness</option>
+                    <option>item name</option>
                   </select>
                 </div>
               </div>

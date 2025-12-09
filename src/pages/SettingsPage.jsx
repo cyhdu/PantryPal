@@ -1,22 +1,20 @@
 import ScaleWrapper from "../components/ScaleWrapper";
-import HeaderProfile from "../components/HeaderProfile";
 import AppSettings from "../components/AppSettings";
 import { useState, useEffect } from "react";
 import api from "../services/api";
-import useAuthGuard from "../components/useAuthGuard"; 
+import useAuthGuard from "../components/useAuthGuard";
 
 export default function SettingsPage() {
   const [userName, setUserName] = useState("User");
 
+  // Protect the page
+  useAuthGuard();
+
   useEffect(() => {
-    fetchUserName();
-  }, []);
+    const fetchUserName = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
 
-  useAuthGuard(); 
-
-  const fetchUserName = async () => {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
       try {
         const response = await api.get(`/users/${userId}`);
         setUserName(response.data.username);
@@ -24,12 +22,13 @@ export default function SettingsPage() {
         console.error("Error fetching user profile:", error);
         setUserName("User"); // Fallback
       }
-    }
-  };
+    };
+
+    fetchUserName();
+  }, []);
 
   return (
     <ScaleWrapper>
-      <HeaderProfile userName={userName} />
       <AppSettings />
     </ScaleWrapper>
   );

@@ -60,7 +60,11 @@ export default function BudgetPage() {
               <div>
                 <p className="text-xs text-gray-500 mb-1">Saving Reminder</p>
                 <select className="w-full h-10 rounded-lg border border-[#e2e2e2] px-3 bg-white">
+                  <option>Once Per Day</option>
                   <option>Once Per Week</option>
+                  <option>Once Per Month</option>
+                  <option>Once Per Year</option>
+                  <option>Never</option>
                 </select>
               </div>
 

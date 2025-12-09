@@ -178,6 +178,72 @@ router.post("/logout", (req, res) => {
   return res.status(200).json({ message: "Logged out" });
 });
 
+// Update username and password in setting
+
+// UPDATE USERNAME
+router.patch("/:id", authenticate, async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    if (!username || username.trim() === "") {
+      return res.status(400).json({ message: "Username cannot be empty." });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    user.name = username; // Your DB uses "name"
+    await user.save();
+
+    return res.status(200).json({ message: "Username updated successfully." });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error." });
+  }
+});
+
+// UPDATE PASSWORD
+router.patch("/:id/password", authenticate, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Missing fields." });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters." });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    // check old password
+    const valid = await bcrypt.compare(oldPassword, user.password1);
+    if (!valid) {
+      return res.status(400).json({ message: "Old password is incorrect." });
+    }
+
+    // hash new password
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    // update both password fields
+    user.password1 = hashed;
+    user.password2 = hashed;
+
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully." });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server error." });
+  }
+});
+
+
+
 // ---------------- PROTECTED ROUTE EXAMPLE ----------------
 router.get("/private", authenticate, authorize(["admin"]), (req, res) => {
   res.json({

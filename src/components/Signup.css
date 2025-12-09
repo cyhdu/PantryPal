@@ -100,7 +100,7 @@ body,
 }
 
 .signup-btn {
-    background-color: #E87524;
+    background-color: #4D7C0F60;
     color: #FFFFFF;
     font-weight: bold;
     border-radius: 5px;
@@ -112,6 +112,12 @@ body,
     margin: 8px 0 18px 0;
     cursor: pointer;
     margin-bottom: 40px;
+}
+
+.signup-btn:hover {
+    background-color: transparent;
+    border: 1px solid #4D7C0F;
+    color: #4D7C0F;
 }
 
 .already-account {
@@ -145,15 +151,20 @@ body,
 
 .log-in {
     background-color: transparent;
-    color: #4D7C0F;
+    color: #E87524;
     font-weight: bold;
     border-radius: 4px;
-    border: 1px solid #4D7C0F;
+    border: 1px solid #E87524;
     text-align: center;
     width: 100%;
     padding: 12px;
     margin-bottom: 50px;
     cursor: pointer;
+}
+
+.log-in:hover {
+    background-color: #E87524;
+    color: white;
 }
 
 .error {
