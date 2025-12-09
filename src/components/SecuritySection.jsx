@@ -11,7 +11,7 @@ export default function SecuritySection() {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
-  const [toast, setToast] = useState(null); // NEW
+  const [toast, setToast] = useState(null);
 
   const toggleOpen = () => setOpen((prev) => !prev);
 

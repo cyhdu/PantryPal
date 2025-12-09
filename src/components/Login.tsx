@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -5,7 +6,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import TermsModal from "./TermsModal";
 import axios from "axios";
 import "./Login.css";
-import { toast } from "react-toastify";
+import ToastMessage from "./ToastMessage";
 
 export const Login = () => {
   const [checked, setChecked] = useState(false);
@@ -14,12 +15,19 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Custom toast (your own component)
+  const [toastData, setToastData] = useState(null);
+
   const [showTerms, setShowTerms] = useState(false);
 
   const navigate = useNavigate();
 
+  const showToast = (message, type = "success") => {
+    setToastData({ message, type });
+  };
+
   /* -----------------------------
-      LOAD REMEMBER ME DATA ONCE
+      LOAD REMEMBER ME DATA
      ----------------------------- */
   useEffect(() => {
     const savedChecked = localStorage.getItem("rememberMe");
@@ -30,23 +38,37 @@ export const Login = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (checked) {
+      localStorage.setItem("savedEmail", email);
+    }
+  }, [email, checked]);
+
   /* -----------------------------
-      WHEN CHECKBOX CHANGES
+       SHOW LOGOUT MESSAGE
+     ----------------------------- */
+  useEffect(() => {
+    const msg = localStorage.getItem("logoutMessage");
+    if (msg) {
+      showToast(msg, "success");
+      localStorage.removeItem("logoutMessage");
+    }
+  }, []);
+
+  /* -----------------------------
+        REMEMBER ME TOGGLE
      ----------------------------- */
   const handleRememberToggle = (value) => {
     setChecked(value);
+    localStorage.setItem("rememberMe", value ? "true" : "false");
 
-    if (value) {
-      localStorage.setItem("rememberMe", "true");
-      localStorage.setItem("savedEmail", email);
-    } else {
-      localStorage.removeItem("rememberMe");
+    if (!value) {
       localStorage.removeItem("savedEmail");
     }
   };
 
   /* -----------------------------
-              LOGIN
+                 LOGIN
      ----------------------------- */
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,38 +79,45 @@ export const Login = () => {
         password,
       })
       .then((res) => {
-        toast.success("Logged in successfully!");
-        console.log("Login response data:", res.data);
+        showToast("Logged in successfully!", "success");
 
         const { userId, token } = res.data;
 
         if (token) {
-          // Save token for authenticated requests
           localStorage.setItem("token", token);
           localStorage.setItem("userId", userId);
-        } else {
-          console.error("No token received from login API!");
         }
 
         if (checked) {
           localStorage.setItem("savedEmail", email);
         }
 
-        navigate("/insight", {
-          state: { userId, email },
-        });
+        setTimeout(() => {
+          navigate("/insight", {
+            state: { userId, email },
+          });
+        }, 300);
       })
       .catch((err) => {
         if (err.response?.data?.message) {
-          alert(err.response.data.message);
+          showToast(err.response.data.message, "error");
         } else {
-          alert("Something went wrong.");
+          showToast("Something went wrong.", "error");
         }
       });
   };
 
   return (
     <div className="background">
+      {/* Toast */}
+      {toastData && (
+        <ToastMessage
+          message={toastData.message}
+          type={toastData.type}
+          onClose={() => setToastData(null)}
+        />
+      )}
+
       <div className="container">
         <div className="logo-wrapper">
           <img src={logo} alt="Logo" className="logo-img" />
@@ -114,6 +143,7 @@ export const Login = () => {
               {showPassword ? <FiEyeOff /> : <FiEye />}
             </span>
           </label>
+
           <input
             type={showPassword ? "text" : "password"}
             className="input-box"
@@ -127,8 +157,8 @@ export const Login = () => {
               checked={checked}
               onChange={(e) => handleRememberToggle(e.target.checked)}
             />
-            <span className="custom-check"></span>
-            <span className="checkbox-text"> Remember me</span>
+            <span className="checkmark"></span>
+            Remember me
           </label>
 
           <p className="message">

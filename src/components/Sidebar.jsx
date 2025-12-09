@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/pantrypal.png";
 
 const navLinkBase =
@@ -13,6 +13,8 @@ const getNavClasses = ({ isActive }) =>
   }`;
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside className="fixed left-0 top-0 h-full w-60 bg-[#E6EDCC75] border-r border-[#E6EDCC75] flex flex-col justify-between">
 
@@ -21,7 +23,8 @@ export default function Sidebar() {
           <img
             src={Logo}
             alt="PantryPal Logo"
-            className="h-10 w-auto object-contain" />
+            className="h-10 w-auto object-contain"
+          />
         </div>
 
         <nav className="flex flex-col">
@@ -29,14 +32,17 @@ export default function Sidebar() {
             <span className={iconCircle}>🍎</span>
             <span>Inventory</span>
           </NavLink>
+
           <NavLink to="/recipes" className={getNavClasses}>
             <span className={iconCircle}>📘</span>
             <span>Recipes</span>
           </NavLink>
+
           <NavLink to="/shopping-list" className={getNavClasses}>
             <span className={iconCircle}>🛒</span>
             <span>Shopping List</span>
           </NavLink>
+
           <NavLink to="/insight" className={getNavClasses}>
             <span className={iconCircle}>📊</span>
             <span>User Insights</span>
@@ -44,23 +50,27 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Bottom nav */}
+      {/* Bottom section */}
       <div className="pb-6">
         <NavLink to="/settings" className={getNavClasses}>
           <span className={iconCircle}>⚙️</span>
           <span>Settings</span>
         </NavLink>
 
+        {/* Logout Button */}
         <button
-          className="w-[calc(100%)] text-left"
+          className="w-full text-left"
           onClick={() => {
-            // Clear all auth info
+            // Clear login data
             localStorage.removeItem("token");
             localStorage.removeItem("userId");
-            localStorage.removeItem("savedEmail");
+            //localStorage.removeItem("savedEmail");
 
-            // Redirect to login
-            window.location.href = "/login";
+            // Store message for Login page to show toast
+            localStorage.setItem("logoutMessage", "Logged out successfully!");
+
+            // Navigate (no page reload)
+            navigate("/login");
           }}
         >
           <div className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-[#c64b3b] hover:bg-[#ffe1ba] cursor-pointer">

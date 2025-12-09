@@ -4,7 +4,7 @@
 html,
 body,
 #root {
-    width: 100%;
+    min-height: 100%;
     margin: 0;
     padding: 0;
 }
@@ -17,10 +17,14 @@ body,
 }
 
 .background {
+    min-height: 100vh;
+    width: 100%;
     background-image: url("../assets/background.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     background-attachment: fixed;
+    background-attachment: scroll;
 
     display: flex;
     justify-content: center;
@@ -32,7 +36,7 @@ body,
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    max-width: 50%;
     padding: 10px;
     margin: 50px;
 
@@ -182,4 +186,72 @@ body,
 .create-btn:hover {
     background-color: #E87524;
     color: white;
+}
+
+/* ============================
+   Custom Checkbox (Working)
+   ============================ */
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    padding-left: 28px;
+    /* space for checkbox */
+    cursor: pointer;
+    user-select: none;
+    color: var(--main-grey);
+    font-size: 14px;
+}
+
+/* Hide actual checkbox */
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    left: 0;
+    top: 0;
+}
+
+/* Fake checkbox box */
+.checkmark {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--main-yellow);
+    border-radius: 3px;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+/* When checked */
+.checkbox-container input:checked+.checkmark {
+    background-color: var(--main-yellow);
+    border-color: var(--main-yellow);
+}
+
+/* Checkmark tick */
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked+.checkmark:after {
+    display: block;
+}
+
+.checkmark:after {
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
