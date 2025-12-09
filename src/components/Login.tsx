@@ -74,7 +74,7 @@ export const Login = () => {
     e.preventDefault();
 
     axios
-      .post("http://127.0.0.1:3000/api/users/login", {
+      .post("https://pantrypal-p1re.onrender.com/api/users/login", {
         email,
         password,
       })

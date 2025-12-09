@@ -20,7 +20,7 @@ export const ResetPassword = () => {
     }
 
     axios
-      .post("http://127.0.0.1:3000/api/users/resetpassword", {
+      .post("https://pantrypal-p1re.onrender.com/api/users/resetpassword", {
         name,
         newPassword,
         confirmPassword,

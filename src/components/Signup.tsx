@@ -23,13 +23,13 @@ export const Signup = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
-      .post("http://127.0.0.1:3000/api/users/signup", {
+      .post("https://pantrypal-p1re.onrender.com/api/users/signup", {
         name,
         email,
         password1,
         password2,
       })
-      .then((res) => {
+      .then((_res) => {
         toast.success("Account created successfully!");
         setTimeout(() => navigate("/login"), 1500);
       })

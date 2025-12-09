@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 // import profilePic from "../assets/logo-white.jpeg";
 import api from "../services/api";
 

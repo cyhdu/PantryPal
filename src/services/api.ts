@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance
 const api = axios.create({
-  baseURL: "http://127.0.0.1:3000/api",
+  baseURL: "https://pantrypal-p1re.onrender.com/api",
 });
 
 // Request interceptor to add token
@@ -12,7 +12,7 @@ api.interceptors.request.use(
     const token = localStorage.getItem("token");
     console.log("API Request:", config.url);
     console.log("Token from localStorage:", token);
-    
+
     if (token) {
       config.headers["x-authorization"] = token;
       console.log("Attached x-authorization header");
